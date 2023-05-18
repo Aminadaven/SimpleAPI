@@ -1,5 +1,7 @@
 # SimpleAPI Documentation
 
+[![](https://jitpack.io/v/Aminadaven/SimpleAPI.svg)](https://jitpack.io/#Aminadaven/SimpleAPI)
+
 ## Introduction
 
 SimpleAPI is a lightweight library that simplifies the creation of RESTful endpoints in Tomcat applications. It provides a convenient way to define RESTful endpoints using annotations and handles the request/response processing for you. This documentation provides comprehensive information on how to use SimpleAPI to build RESTful APIs in your Tomcat applications.
