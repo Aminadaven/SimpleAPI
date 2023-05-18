@@ -38,16 +38,16 @@ You can add SimpleAPI to your project by including the library as a dependency i
 
 ```xml
 <dependency>
-    <groupId>com.github.aminadaven</groupId>
+    <groupId>com.github.Aminadaven</groupId>
     <artifactId>SimpleAPI</artifactId>
-    <version>1.0.0</version>
+    <version>master-SNAPSHOT</version>
 </dependency>
 ```
 
 And here's an example for Gradle, assuming you have already added the JitPack repository to your `build.gradle` file:
 
 ```groovy
-implementation 'com.github.aminadaven:SimpleAPI:1.0.0'
+implementation 'com.github.Aminadaven:SimpleAPI:master-SNAPSHOT'
 ```
 
 To add the JitPack repository to your Maven or Gradle configuration, follow these steps:
