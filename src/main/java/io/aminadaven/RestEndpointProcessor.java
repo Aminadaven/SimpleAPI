@@ -22,13 +22,12 @@ public class RestEndpointProcessor implements ServletContainerInitializer {
 
     @Override
     public void onStartup(Set<Class<?>> baseAPIs, ServletContext servletContext) throws ServletException {
+        System.out.println("at least reached here!!!");
         if (baseAPIs == null || baseAPIs.isEmpty())
             return;
         for (Class<?> baseAPI : baseAPIs) {
-//            RestEndpoint annotation = baseAPI.getAnnotation(RestEndpoint.class);
-//            if (annotation == null) continue;
             try {
-                registerServlet(baseAPI/*, annotation*/, servletContext);
+                registerServlet(baseAPI, servletContext);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ServletException(e.getCause());
@@ -36,7 +35,7 @@ public class RestEndpointProcessor implements ServletContainerInitializer {
         }
     }
 
-    private void registerServlet(Class<?> baseAPIClass /*, RestEndpoint annotation*/, ServletContext servletContext) throws Exception {
+    private void registerServlet(Class<?> baseAPIClass, ServletContext servletContext) throws Exception {
         Constructor<?> constructor = baseAPIClass.getDeclaredConstructor();
         constructor.setAccessible(true);
         BaseAPI baseAPI = (BaseAPI) constructor.newInstance();

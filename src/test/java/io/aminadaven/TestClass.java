@@ -1,6 +1,6 @@
 package io.aminadaven;
 
-@RestEndpoint("/test")
+//@RestEndpoint("/test")
 public class TestClass implements BaseAPI {
     @Override
     public String basePath() {
