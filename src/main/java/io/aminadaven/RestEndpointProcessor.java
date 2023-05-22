@@ -16,19 +16,19 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
-@HandlesTypes(RestEndpoint.class)
+@HandlesTypes(BaseAPI.class)
 public class RestEndpointProcessor implements ServletContainerInitializer {
     private static final Gson gson = new Gson();
 
     @Override
-    public void onStartup(Set<Class<?>> classes, ServletContext servletContext) throws ServletException {
-        if (classes == null)
+    public void onStartup(Set<Class<?>> baseAPIs, ServletContext servletContext) throws ServletException {
+        if (baseAPIs == null || baseAPIs.isEmpty())
             return;
-        for (Class<?> clazz : classes) {
-            RestEndpoint annotation = clazz.getAnnotation(RestEndpoint.class);
-            if (annotation == null) continue;
+        for (Class<?> baseAPI : baseAPIs) {
+//            RestEndpoint annotation = baseAPI.getAnnotation(RestEndpoint.class);
+//            if (annotation == null) continue;
             try {
-                registerServlet(clazz, annotation, servletContext);
+                registerServlet(baseAPI/*, annotation*/, servletContext);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new ServletException(e.getCause());
@@ -36,13 +36,13 @@ public class RestEndpointProcessor implements ServletContainerInitializer {
         }
     }
 
-    private void registerServlet(Class<?> clazz, RestEndpoint annotation, ServletContext servletContext) throws Exception {
-        String basePath = annotation.value();
-        HttpMethod defaultMethod = annotation.defaultMethod();
-        Constructor<?> constructor = clazz.getDeclaredConstructor();
+    private void registerServlet(Class<?> baseAPIClass /*, RestEndpoint annotation*/, ServletContext servletContext) throws Exception {
+        Constructor<?> constructor = baseAPIClass.getDeclaredConstructor();
         constructor.setAccessible(true);
-        Object instance = constructor.newInstance();
-        Method[] methods = clazz.getMethods();
+        BaseAPI baseAPI = (BaseAPI) constructor.newInstance();
+        String basePath = baseAPI.basePath();
+        HttpMethod defaultMethod = baseAPI.defaultMethod();
+        Method[] methods = baseAPIClass.getMethods();
         for (Method method : methods) {
             RestMethod methodAnnotation = method.getAnnotation(RestMethod.class);
             if (methodAnnotation == null) continue;
@@ -51,8 +51,8 @@ public class RestEndpointProcessor implements ServletContainerInitializer {
             HttpMethod methodHttpMethod = methodAnnotation.value();
             HttpMethod finalHttpMethod = (methodHttpMethod != HttpMethod.UNDEFINED) ? methodHttpMethod : defaultMethod;
 
-            HttpServlet servlet = createDynamicServlet(instance, method, finalHttpMethod);
-            servletContext.addServlet(clazz.getSimpleName() + "#" + method.getName(), servlet).addMapping(fullPath);
+            HttpServlet servlet = createDynamicServlet(baseAPI, method, finalHttpMethod);
+            servletContext.addServlet(baseAPIClass.getSimpleName() + "#" + method.getName(), servlet).addMapping(fullPath);
         }
     }
 

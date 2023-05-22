@@ -1,7 +1,12 @@
 package io.aminadaven;
 
 @RestEndpoint("/test")
-public class TestClass {
+public class TestClass implements BaseAPI {
+    @Override
+    public String basePath() {
+        return "/test";
+    }
+
     @RestMethod(HttpMethod.POST)
     public String testMethod(TestParam param) {
         System.out.println("param is: " + param.getParam());
